@@ -1,0 +1,18 @@
+{
+  "name": "content-automation-studio",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Content Automation Studio (CAS) — prompt-to-published-video platform with AI provider routing, multi-platform publishing and cross-platform monitoring.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:api": "npm run dev -w @cas/api",
+    "dev:web": "npm run dev -w @cas/web",
+    "typecheck": "npm run typecheck -w @cas/shared && npm run typecheck -w @cas/api && npm run typecheck -w @cas/web"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "name": "@cas/shared",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Shared types, constants and platform format adapters for Content Automation Studio.",
+  "main": "dist/index.js",
+  "types": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "node build.mjs",
+    "prepare": "node build.mjs"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./providers": {
+      "types": "./src/providers.ts",
+      "import": "./dist/providers.js",
+      "default": "./dist/providers.js"
+    },
+    "./registry": {
+      "types": "./src/registry.ts",
+      "import": "./dist/registry.js",
+      "default": "./dist/registry.js"
+    },
+    "./formats": {
+      "types": "./src/formats.ts",
+      "import": "./dist/formats.js",
+      "default": "./dist/formats.js"
+    }
+  },
+  "type": "module"
+}
