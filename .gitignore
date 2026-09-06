@@ -1,0 +1,25 @@
+# deps / build
+node_modules/
+.next/
+dist/
+build/
+*.tsbuildinfo
+.turbo/
+
+# env & secrets
+.env
+.env.local
+.env.*.local
+*.pem
+
+# runtime data (local dev stores, uploads, sqlite fallback)
+data/
+apps/api/data/
+tmp/
+
+# logs & OS
+*.log
+.DS_Store
+
+# local toolchain binaries (ffmpeg static build for the demo sandbox)
+.runtime/
