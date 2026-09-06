@@ -1,5 +1,6 @@
 import fs from 'node:fs';
-import { DatabaseSync } from 'node:sqlite';
+import path from 'node:path';
+import Database from 'better-sqlite3';
 import { config } from '../config';
 import { logger } from '../logger';
 import { SCHEMA_SQL, SCHEMA_VERSION } from './schema';
@@ -7,8 +8,10 @@ import { SCHEMA_SQL, SCHEMA_VERSION } from './schema';
 // ---------------------------------------------------------------------------
 // Data access layer.
 //
-// Demo/dev driver: embedded SQLite via node:sqlite (zero external services).
-// All ids are TEXT, timestamps ISO TEXT, JSON payloads stored as text.
+// Driver: better-sqlite3 — a synchronous, prebuilt SQLite driver that works on
+// Node 20+ (unlike node:sqlite, which is experimental and only exists on
+// Node >= 22.5). All ids are TEXT, timestamps ISO TEXT, JSON payloads stored
+// as text.
 //
 // NOTE ON POSTGRESQL: this build deliberately uses a synchronous DAL so the
 // demo runs with no infrastructure. For a production deployment the same
@@ -28,11 +31,11 @@ export interface Db {
 }
 
 function createSqlite(dbFile: string): Db {
-  fs.mkdirSync(requireNodePathDirname(dbFile), { recursive: true });
-  const db = new DatabaseSync(dbFile);
-  db.exec('PRAGMA journal_mode = WAL;');
-  db.exec('PRAGMA foreign_keys = ON;');
-  db.exec('PRAGMA busy_timeout = 5000;');
+  fs.mkdirSync(path.dirname(dbFile), { recursive: true });
+  const db = new Database(dbFile);
+  db.pragma('journal_mode = WAL');
+  db.pragma('foreign_keys = ON');
+  db.pragma('busy_timeout = 5000');
   return {
     all<T = Row>(sql: string, params: unknown[] = []): T[] {
       return db.prepare(sql).all(...(params as never[])) as T[];
@@ -44,19 +47,13 @@ function createSqlite(dbFile: string): Db {
       const res = db.prepare(sql).run(...(params as never[]));
       return { changes: Number(res.changes) };
     },
-    exec(sql) {
+    exec(sql: string) {
       db.exec(sql);
     },
     close() {
       db.close();
     },
   };
-}
-
-// tiny helper (avoids a top-level node:path import dance in this hot file)
-import { dirname } from 'node:path';
-function requireNodePathDirname(p: string): string {
-  return dirname(p);
 }
 
 let db: Db | null = null;

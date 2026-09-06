@@ -30,7 +30,7 @@ drive real providers once keys + OAuth credentials are configured.
 
 ```
 apps/api/            Express + tsx API  (port 8787)
-  src/db/            embedded SQLite DAL (node:sqlite) + schema + demo seed
+  src/db/            embedded SQLite DAL (better-sqlite3) + schema + demo seed
   src/providers/     AI router, OpenAI-compatible + offline mock adapters
   src/lib/           pipeline stages: assets, pipeline, trends, analytics
   src/ffmpeg.ts      slideshow assembler (Ken Burns, libass captions, mix)
@@ -49,6 +49,11 @@ Requirements: **Node ≥ 20** (tested on 22), and **FFmpeg** on `PATH` (or set
 `CAS_FFMPEG_PATH`). Install a static build and point at it, e.g.
 `CAS_FFMPEG_PATH=/path/to/ffmpeg`. The API checks `.runtime/ffmpeg` in the repo
 root first, then `PATH`.
+
+The DB layer uses **better-sqlite3** (prebuilt binaries for Node 20/22/24). If
+npm can't fetch the prebuilt binary, point node-gyp at your local Node headers
+so it compiles instead: `npm_config_nodedir="$(dirname "$(dirname "$(which node)")")" npm install`
+(e.g. `nodedir=/usr/local` when `node` lives at `/usr/local/bin/node`).
 
 ```bash
 npm install            # hoisted workspaces; prepare builds @cas/shared → dist
